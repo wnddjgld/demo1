@@ -32,7 +32,7 @@ public class SecurityConfig {
                 .headers(h -> h.frameOptions(f -> f.disable())) // H2 콘솔용
                 .authorizeHttpRequests(reg -> reg
                         // [수정] "/download/**" 경로 추가
-                        .requestMatchers("/", "/login", "/register", "/register/**", "/css/**", "/h2-console/**", "/download/**", "/pending-approval").permitAll()
+                        .requestMatchers("/", "/login", "/register", "/register/**", "/css/**", "/h2-console/**", "/download/**", "/pending-approval", "/api/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/prof/**").hasAnyRole("PROFESSOR","ADMIN")
                         .requestMatchers("/stu/**").hasAnyRole("STUDENT","ADMIN")

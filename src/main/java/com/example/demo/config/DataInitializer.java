@@ -29,13 +29,13 @@ public class DataInitializer {
                 users.save(admin);
             }
             // ▼▼▼ [추가] 테스트 교수 계정 생성 (승인 완료 상태) ▼▼▼
-            if (users.findByUsername("prof1").isEmpty()) {
+            if (users.findByUsername("asdf").isEmpty()) {
                 users.save(User.builder().username("asdf").password(encoder.encode("asdf"))
                         .name("김교수").role(Role.PROFESSOR).enabled(true).professorApplicant(false).build());
             }
 
             // ▼▼▼ [추가] 테스트 학생 계정 생성 ▼▼▼
-            if (users.findByUsername("stu1").isEmpty()) {
+            if (users.findByUsername("123").isEmpty()) {
                 users.save(User.builder().username("123").password(encoder.encode("123"))
                         .name("이학생").role(Role.STUDENT).enabled(true).professorApplicant(false).build());
             }
