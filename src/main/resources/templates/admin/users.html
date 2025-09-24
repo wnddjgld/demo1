@@ -1,10 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8"><title>사용자 관리</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-$END$
+<h2>사용자 목록</h2>
+<table border="1" cellpadding="6">
+    <tr><th>ID</th><th>username</th><th>name</th><th>role</th><th>승인</th></tr>
+    <tr th:each="u : ${users}">
+        <td th:text="${u.id}"></td>
+        <td th:text="${u.username}"></td>
+        <td th:text="${u.name}"></td>
+        <td th:text="${u.role}"></td>
+        <td>
+            <form th:if="${u.role.name() != 'PROFESSOR'}"
+                  th:action="@{|/admin/approve/${u.id}|}" method="post">
+                <button type="submit">교수승인</button>
+            </form>
+        </td>
+    </tr>
+</table>
+<p><a href="/home">뒤로</a></p>
 </body>
 </html>

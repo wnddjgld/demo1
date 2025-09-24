@@ -1,4 +1,2 @@
 package com.example.demo.domain;
-
-public class Role {
-}
+public enum Role { ADMIN, PROFESSOR, STUDENT }

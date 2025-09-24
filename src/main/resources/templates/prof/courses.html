@@ -1,10 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8"><title>내 수업</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-$END$
+<h2>내 수업</h2>
+
+<form method="post" action="/prof/courses">
+    <input name="title" placeholder="수업명">
+    <input name="description" placeholder="설명">
+    <button type="submit">수업 생성</button>
+</form>
+
+<ul>
+    <li th:each="c : ${courses}">
+        <b th:text="${c.title}"></b>
+        <form th:action="@{|/prof/announce/${c.id}|}" method="post" style="display:inline">
+            <input name="title" placeholder="공지제목">
+            <input name="content" placeholder="공지내용">
+            <button>공지등록</button>
+        </form>
+        <form th:action="@{|/prof/assign/${c.id}|}" method="post" style="display:inline">
+            <input name="title" placeholder="과제제목">
+            <input name="contentText" placeholder="과제설명">
+            <input name="dueAt" placeholder="마감시각 ISO(YYYY-MM-DDTHH:mm)">
+            <button>과제등록</button>
+        </form>
+    </li>
+</ul>
+
+<p><a href="/home">뒤로</a></p>
 </body>
 </html>

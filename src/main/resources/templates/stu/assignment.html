@@ -1,10 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8"><title>과제 제출</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-$END$
+<h2 th:text="${asg.title}">과제</h2>
+<p th:text="${asg.contentText}"></p>
+<p>마감: <span th:text="${asg.dueAt}"></span></p>
+
+<form th:action="@{|/stu/submit/${asg.id}|}" method="post" enctype="multipart/form-data">
+    <textarea name="text" placeholder="과제 텍스트" rows="5" cols="60"></textarea><br>
+    <input type="file" name="file"><br>
+    <button type="submit">제출</button>
+</form>
+<p><a href="/stu/courses">뒤로</a></p>
 </body>
 </html>

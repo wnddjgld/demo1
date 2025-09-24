@@ -1,10 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8"><title>수업 목록</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-$END$
+<h2>수업 목록</h2>
+<ul>
+    <li th:each="c : ${courses}">
+        <b th:text="${c.title}"></b>
+        <form th:action="@{|/stu/join/${c.id}|}" method="post" style="display:inline">
+            <button>참여</button>
+        </form>
+    </li>
+</ul>
+<p><a href="/home">뒤로</a></p>
 </body>
 </html>

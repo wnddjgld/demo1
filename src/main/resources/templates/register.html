@@ -1,10 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8"><title>회원가입</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-$END$
+<h2>회원가입</h2>
+<h3>학생 가입</h3>
+<form method="post" action="/register/student">
+    <input name="username" placeholder="아이디">
+    <input name="password" type="password" placeholder="비밀번호">
+    <input name="name" placeholder="이름">
+    <button type="submit">학생 가입</button>
+</form>
+<hr>
+<h3>교수(승인대기) 가입</h3>
+<form method="post" action="/register/prof">
+    <input name="username" placeholder="아이디">
+    <input name="password" type="password" placeholder="비밀번호">
+    <input name="name" placeholder="이름">
+    <button type="submit">교수 가입 신청</button>
+</form>
 </body>
 </html>
