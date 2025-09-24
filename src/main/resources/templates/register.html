@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <title>회원가입</title>
     <link rel="stylesheet" href="/css/style.css">
+    <style>
+        /* 메시지 스타일 추가 */
+        .check-msg {
+            font-size: 12px;
+            margin-top: 5px;
+            font-weight: 600;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
@@ -17,52 +25,50 @@
         <h2 style="text-align: center; margin-bottom: 40px;">회원가입</h2>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
-            <!-- 학생 가입 -->
             <div class="form-container">
                 <h3 style="color: #667eea; text-align: center; margin-bottom: 20px;">👨‍🎓 학생 가입</h3>
                 <p style="text-align: center; color: #666; margin-bottom: 25px;">가입 즉시 이용 가능</p>
-
-                <form method="post" action="/register/student">
+                <form method="post" action="/register/student" onsubmit="return validateForm('student')">
                     <div class="form-group">
                         <label for="student_username">아이디</label>
-                        <input type="text" id="student_username" name="username" required placeholder="아이디를 입력하세요">
+                        <div style="display: flex; gap: 10px;">
+                            <input type="text" id="student_username" name="username" required placeholder="아이디를 입력하세요" style="flex-grow: 1;">
+                            <button type="button" class="btn btn-secondary" onclick="checkUsername('student')">중복확인</button>
+                        </div>
+                        <p id="student_username_msg" class="check-msg"></p>
                     </div>
-
                     <div class="form-group">
                         <label for="student_password">비밀번호</label>
                         <input type="password" id="student_password" name="password" required placeholder="비밀번호를 입력하세요">
                     </div>
-
                     <div class="form-group">
                         <label for="student_name">이름</label>
                         <input type="text" id="student_name" name="name" required placeholder="실명을 입력하세요">
                     </div>
-
                     <button type="submit" class="btn" style="width: 100%;">학생으로 가입</button>
                 </form>
             </div>
 
-            <!-- 교수 가입 -->
             <div class="form-container">
                 <h3 style="color: #e74c3c; text-align: center; margin-bottom: 20px;">👨‍🏫 교수 가입</h3>
                 <p style="text-align: center; color: #666; margin-bottom: 25px;">관리자 승인 후 이용 가능</p>
-
-                <form method="post" action="/register/prof">
+                <form method="post" action="/register/prof" onsubmit="return validateForm('prof')">
                     <div class="form-group">
                         <label for="prof_username">아이디</label>
-                        <input type="text" id="prof_username" name="username" required placeholder="아이디를 입력하세요">
+                        <div style="display: flex; gap: 10px;">
+                            <input type="text" id="prof_username" name="username" required placeholder="아이디를 입력하세요" style="flex-grow: 1;">
+                            <button type="button" class="btn btn-secondary" onclick="checkUsername('prof')">중복확인</button>
+                        </div>
+                        <p id="prof_username_msg" class="check-msg"></p>
                     </div>
-
                     <div class="form-group">
                         <label for="prof_password">비밀번호</label>
                         <input type="password" id="prof_password" name="password" required placeholder="비밀번호를 입력하세요">
                     </div>
-
                     <div class="form-group">
                         <label for="prof_name">이름</label>
                         <input type="text" id="prof_name" name="name" required placeholder="실명을 입력하세요">
                     </div>
-
                     <button type="submit" class="btn btn-danger" style="width: 100%;">교수 가입 신청</button>
                 </form>
             </div>
@@ -72,21 +78,74 @@
             <p>이미 계정이 있으신가요? <a href="/login" style="color: #667eea;">로그인하기</a></p>
         </div>
     </div>
-
-    <div class="card" style="max-width: 600px; margin: 30px auto; text-align: center;">
-        <h3>ℹ️ 가입 안내</h3>
-        <div style="text-align: left; margin-top: 20px;">
-            <div style="margin-bottom: 15px;">
-                <strong>👨‍🎓 학생:</strong> 가입 즉시 수업 참여 및 과제 제출이 가능합니다.
-            </div>
-            <div style="margin-bottom: 15px;">
-                <strong>👨‍🏫 교수:</strong> 가입 후 관리자의 승인이 필요합니다. 승인 후 수업 개설 및 관리가 가능합니다.
-            </div>
-            <div>
-                <strong>🛡️ 관리자:</strong> 별도 생성 (admin/admin1234)으로 시스템 전체를 관리할 수 있습니다.
-            </div>
-        </div>
-    </div>
 </div>
+
+<script>
+    // 중복 확인 상태를 추적하는 변수
+    let isStudentUsernameChecked = false;
+    let isProfUsernameChecked = false;
+
+    // 아이디 입력란에 내용이 변경되면, 중복 확인 상태를 리셋
+    document.getElementById('student_username').addEventListener('input', () => {
+        isStudentUsernameChecked = false;
+        document.getElementById('student_username_msg').innerText = '';
+    });
+    document.getElementById('prof_username').addEventListener('input', () => {
+        isProfUsernameChecked = false;
+        document.getElementById('prof_username_msg').innerText = '';
+    });
+
+    // 중복 확인 함수
+    async function checkUsername(type) {
+        const usernameInput = document.getElementById(type + '_username');
+        const msgElement = document.getElementById(type + '_username_msg');
+        const username = usernameInput.value;
+
+        if (!username) {
+            msgElement.innerText = '아이디를 입력해주세요.';
+            msgElement.style.color = 'red';
+            return;
+        }
+
+        try {
+            // 서버 API에 아이디를 보내 중복 여부 확인
+            const response = await fetch(`/api/check-username?username=${encodeURIComponent(username)}`);
+            const data = await response.json();
+
+            if (data.available) {
+                msgElement.innerText = '사용할 수 있는 아이디 입니다.';
+                msgElement.style.color = 'green';
+                if (type === 'student') isStudentUsernameChecked = true;
+                if (type === 'prof') isProfUsernameChecked = true;
+            } else {
+                msgElement.innerText = '이미 사용중인 아이디입니다.';
+                msgElement.style.color = 'red';
+                if (type === 'student') isStudentUsernameChecked = false;
+                if (type === 'prof') isProfUsernameChecked = false;
+            }
+        } catch (error) {
+            msgElement.innerText = '오류가 발생했습니다. 다시 시도해주세요.';
+            msgElement.style.color = 'red';
+        }
+    }
+
+    // 폼 제출 유효성 검사 함수
+    function validateForm(type) {
+        if (type === 'student') {
+            if (!isStudentUsernameChecked) {
+                alert('학생 아이디 중복확인을 해주세요.');
+                return false; // 폼 제출 방지
+            }
+        }
+        if (type === 'prof') {
+            if (!isProfUsernameChecked) {
+                alert('교수 아이디 중복확인을 해주세요.');
+                return false; // 폼 제출 방지
+            }
+        }
+        return true; // 폼 제출 허용
+    }
+</script>
+
 </body>
 </html>

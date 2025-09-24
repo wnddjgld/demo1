@@ -12,6 +12,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import java.util.Map;
+import java.util.HashMap;
 
 @Controller
 @RequiredArgsConstructor
@@ -19,6 +24,23 @@ public class HomeAuthController {
 
     private final AuthService authService;
     private final UserRepository userRepo;
+
+    /**
+     * [추가] 아이디 중복 확인을 위한 API
+     * @param username 중복 확인할 아이디
+     * @return 사용 가능 여부를 JSON 형태로 반환 (e.g., {"available": true})
+     */
+    @GetMapping("/api/check-username")
+    @ResponseBody
+    public ResponseEntity<Map<String, Boolean>> checkUsername(@RequestParam String username) {
+        // username으로 사용자를 찾아보고, 없으면 isAvailable은 true가 됨
+        boolean isAvailable = userRepo.findByUsername(username).isEmpty();
+
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("available", isAvailable);
+
+        return ResponseEntity.ok(response);
+    }
 
     @GetMapping("/")
     public String index() { return "index"; }

@@ -1,29 +1,66 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"><title>사용자 관리</title>
+    <meta charset="UTF-8">
+    <title>사용자 관리</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-<h2>사용자 목록</h2>
-<table border="1" cellpadding="6">
-    <tr><th>ID</th><th>username</th><th>name</th><th>role</th><th>상태</th><th>승인</th></tr>
-    <tr th:each="u : ${users}">
-        <td th:text="${u.id}"></td>
-        <td th:text="${u.username}"></td>
-        <td th:text="${u.name}"></td>
-        <td th:text="${u.role}"></td>
-        <td>
-            <span th:if="${u.isProfessorApplicant()}" class="status-badge status-pending">승인 대기</span>
-        </td>
-        <td>
-            <form th:if="${u.isProfessorApplicant()}"
-                  th:action="@{|/admin/approve/${u.id}|}" method="post">
-                <button type="submit">교수승인</button>
-            </form>
-        </td>
-    </tr>
-</table>
-<p><a href="/home">뒤로</a></p>
+<div class="container">
+    <header class="header">
+        <div class="header-content">
+            <h1>👥 사용자 관리</h1>
+            <div class="user-info">
+                <span th:text="'환영합니다, ' + ${me.name} + ' 님'"></span>
+                <a href="/logout" class="logout-btn">로그아웃</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="nav-links">
+        <a href="/admin/home">🏠 홈</a>
+        <a href="/admin/users">👥 사용자 관리</a>
+        <a href="/admin/courses">📚 수업 관리</a>
+    </div>
+
+    <h2>전체 사용자 목록</h2>
+
+    <div class="table-container">
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>아이디</th>
+                <th>이름</th>
+                <th>역할</th>
+                <th>상태</th>
+                <th>관리</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="u : ${users}">
+                <td th:text="${u.id}"></td>
+                <td th:text="${u.username}"></td>
+                <td th:text="${u.name}"></td>
+                <td th:text="${u.role}"></td>
+                <td>
+                    <span th:if="${u.isProfessorApplicant()}" class="status-badge status-pending">승인 대기</span>
+                </td>
+                <td>
+                    <form th:if="${u.isProfessorApplicant()}"
+                          th:action="@{|/admin/approve/${u.id}|}" method="post" style="display: inline-block;">
+                        <button type="submit" class="btn btn-small btn-success">교수 승인</button>
+                    </form>
+                    <form th:if="${u.role.name() != 'ADMIN'}"
+                          th:action="@{|/admin/delete-user/${u.id}|}" method="post"
+                          onsubmit="return confirm('이 사용자를 정말 삭제하시겠습니까? 관련 데이터가 모두 삭제됩니다.');" style="display: inline-block;">
+                        <button type="submit" class="btn btn-small btn-danger">삭제</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 </body>
 </html>
