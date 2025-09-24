@@ -59,30 +59,30 @@
       <div th:if="${submission.filePath}">
         <strong>첨부 파일:</strong>
         <div style="margin-top: 10px;">
-          <span th:text="${submission.filePath}"></span>
+          <a th:href="@{|/download/${submission.id}/${submission.originalFileName}|}" th:text="${submission.originalFileName}"></a>
         </div>
+      </div>
       </div>
     </div>
 
-    <div class="card" th:if="${submission.score != null or submission.feedback}">
+    <div class="card" th:if="${submission.score != null or (submission.feedback != null and not #strings.isEmpty(submission.feedback))}">
       <h3>채점 결과</h3>
       <div th:if="${submission.score != null}" style="margin-bottom: 15px;">
         <strong>점수:</strong>
         <span class="score-display" th:text="${submission.score} + '점'"></span>
       </div>
-      <div th:if="${submission.feedback}">
+      <div th:if="${submission.feedback != null and not #strings.isEmpty(submission.feedback)}">
         <strong>교수님 피드백:</strong>
         <div style="background: #f8f9fa; padding: 15px; border-radius: 6px; margin-top: 10px; white-space: pre-wrap;"
              th:text="${submission.feedback}"></div>
       </div>
     </div>
 
-    <div class="card" th:unless="${submission.score != null or submission.feedback}" style="text-align: center;">
+    <div class="card" th:unless="${submission.score != null or (submission.feedback != null and not #strings.isEmpty(submission.feedback))}" style="text-align: center;">
       <h3>아직 채점되지 않았습니다</h3>
       <p>교수님의 채점을 기다려 주세요.</p>
       <span class="status-badge status-pending">채점 대기중</span>
     </div>
-
     <div style="text-align: center; margin-top: 30px;">
       <a th:href="@{|/stu/assignment/${assignment.id}|}" class="btn btn-secondary">과제 다시 제출하기</a>
     </div>

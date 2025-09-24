@@ -12,4 +12,6 @@ public interface SubmissionRepository extends JpaRepository<Submission, Long> {
     // [추가] 과제 ID로 모든 제출물 삭제
     @Transactional
     void deleteAllByAssignment_Id(Long assignmentId);
+
+    long countByStudentId(Long studentId);
 }

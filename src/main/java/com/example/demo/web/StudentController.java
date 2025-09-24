@@ -19,6 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.Set; // [추가]
+import com.example.demo.domain.Announcement;
+import com.example.demo.repository.AnnouncementRepository;
 
 @Controller
 @RequiredArgsConstructor
@@ -31,6 +33,7 @@ public class StudentController {
     private final SubmissionRepository subRepo;
     private final EnrollmentRepository enrollRepo;
     private final CourseService courseService;
+    private final AnnouncementRepository annRepo;
 
     @Value("${file.upload-dir}")
     private String uploadDir;
@@ -44,7 +47,7 @@ public class StudentController {
         model.addAttribute("courseCount", enrollments.size());
 
         // 내가 제출한 과제 수 계산
-        long submissionCount = subRepo.findByAssignmentId(1L).size(); // 임시로 하드코딩
+        long submissionCount = subRepo.countByStudentId(student.getId());
         model.addAttribute("submissionCount", submissionCount);
 
         return "stu/home";
@@ -92,6 +95,9 @@ public class StudentController {
         }
 
         List<Assignment> assignments = asgRepo.findByCourseIdOrderByCreatedAtDesc(courseId);
+
+        List<Announcement> announcements = annRepo.findByCourseIdOrderByCreatedAtDesc(courseId);
+        model.addAttribute("announcements", announcements);
 
         model.addAttribute("me", student);
         model.addAttribute("course", course);

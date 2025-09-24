@@ -13,6 +13,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import com.example.demo.domain.Announcement;
+import com.example.demo.repository.AnnouncementRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,6 +30,8 @@ public class ProfessorController {
     private final SubmissionRepository submissionRepo;
     private final EnrollmentRepository enrollmentRepo;
     private final CourseService courseService;
+    private final AnnouncementRepository annRepo;
+
 
     @GetMapping("/home")
     public String professorHome(@AuthenticationPrincipal UserDetails me, Model model) {
@@ -82,6 +86,9 @@ public class ProfessorController {
         model.addAttribute("course", course);
         model.addAttribute("assignments", assignmentRepo.findByCourseIdOrderByCreatedAtDesc(courseId));
         model.addAttribute("enrollments", enrollmentRepo.findByCourseId(courseId));
+
+        List<Announcement> announcements = annRepo.findByCourseIdOrderByCreatedAtDesc(courseId);
+        model.addAttribute("announcements", announcements);
         return "prof/course-detail";
     }
 

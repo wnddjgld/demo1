@@ -56,13 +56,21 @@ public class CourseService {
     public Submission submitAssignment(User student, Long assignmentId, String text, MultipartFile file, String uploadDir) throws Exception {
         Assignment asg = asgRepo.findById(assignmentId).orElseThrow();
 
-        String filePath = null;
+        String savedFileName = null; // [수정] 변수명 변경
+        String originalName = null;  // [추가] 원본 파일명을 위한 변수
+
         if (file != null && !file.isEmpty()) {
             Files.createDirectories(Path.of(uploadDir));
-            String saved = UUID.randomUUID() + "_" + file.getOriginalFilename();
-            Path target = Path.of(uploadDir, saved);
+
+            originalName = file.getOriginalFilename(); // [추가] 원본 파일명 가져오기
+            String extension = "";
+            if (originalName.contains(".")) {
+                extension = originalName.substring(originalName.lastIndexOf("."));
+            }
+
+            savedFileName = UUID.randomUUID() + extension; // [수정] UUID + 확장자로 저장
+            Path target = Path.of(uploadDir, savedFileName);
             Files.copy(file.getInputStream(), target, StandardCopyOption.REPLACE_EXISTING);
-            filePath = target.toString();
         }
 
         LocalDateTime now = LocalDateTime.now();
@@ -72,7 +80,13 @@ public class CourseService {
                 .orElse(Submission.builder().assignment(asg).student(student).build());
 
         s.setText(text);
-        s.setFilePath(filePath != null ? filePath : s.getFilePath());
+
+        // [수정] 파일 경로와 원본 파일명 저장 로직
+        if (savedFileName != null) {
+            s.setFilePath(savedFileName);
+            s.setOriginalFileName(originalName);
+        }
+
         s.setSubmittedAt(now);
         s.setLate(late);
 

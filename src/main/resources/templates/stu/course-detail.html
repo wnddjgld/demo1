@@ -32,6 +32,21 @@
         </div>
     </div>
 
+    <div style="margin-bottom: 40px;">
+        <h3>📢 공지사항</h3>
+        <div th:if="${#lists.isEmpty(announcements)}" class="card" style="text-align: center;">
+            <p>아직 등록된 공지사항이 없습니다.</p>
+        </div>
+        <ul class="assignment-list" th:unless="${#lists.isEmpty(announcements)}">
+            <li class="assignment-item" th:each="an : ${announcements}">
+                <div class="assignment-title" th:text="${an.title}"></div>
+                <div class="assignment-description" style="white-space: pre-wrap;" th:text="${an.content}"></div>
+                <div style="color: #999; font-size: 12px; text-align: right;">
+                    <span th:text="${#temporals.format(an.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
+                </div>
+            </li>
+        </ul>
+    </div>
     <h3>📝 과제 목록</h3>
     <div th:if="${#lists.isEmpty(assignments)}" class="card" style="text-align: center;">
         <p>아직 등록된 과제가 없습니다.</p>

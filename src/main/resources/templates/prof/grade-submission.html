@@ -44,8 +44,7 @@
     <div th:if="${submission.filePath}">
       <strong>첨부 파일:</strong>
       <div style="margin-top: 10px;">
-        <span th:text="${submission.filePath}"></span>
-        <small style="color: #666;"> (파일 다운로드 기능은 추후 구현 예정)</small>
+        <a th:href="@{|/download/${submission.id}/${submission.originalFileName}|}" th:text="${submission.originalFileName}"></a>
       </div>
     </div>
   </div>

@@ -44,7 +44,7 @@
             <div class="form-group">
                 <label for="file">파일 첨부</label>
                 <input type="file" id="file" name="file">
-                <div th:if="${submission != null and submission.filePath}" style="margin-top: 10px;">
+                <div th:if="${submission != null and submission.filePath != null and not #strings.isEmpty(submission.filePath)}" style="margin-top: 10px;">
                     <small style="color: #666;">기존 제출 파일: <span th:text="${submission.filePath}"></span></small>
                 </div>
             </div>
