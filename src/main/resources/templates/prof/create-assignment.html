@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>과제 생성</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="container">
+  <header class="header">
+    <div class="header-content">
+      <h1>📝 새 과제 생성</h1>
+      <div class="user-info">
+        <span th:text="'환영합니다, ' + ${me.name} + ' 교수님'"></span>
+        <a href="/logout" class="logout-btn">로그아웃</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="nav-links">
+    <a href="/prof/home">🏠 홈</a>
+    <a href="/prof/courses">📚 내 수업</a>
+    <a th:href="@{|/prof/course-detail/${course.id}|}">📋 수업 상세</a>
+  </div>
+
+  <div class="card" style="margin-bottom: 20px;">
+    <h3 th:text="'수업: ' + ${course.title}"></h3>
+    <p th:text="${course.description}"></p>
+  </div>
+
+  <div class="form-container">
+    <h2>과제 정보 입력</h2>
+    <form method="post" th:action="@{|/prof/create-assignment/${course.id}|}">
+      <div class="form-group">
+        <label for="title">과제 제목 *</label>
+        <input type="text" id="title" name="title" required placeholder="예: 1차 과제 - 자료구조 구현">
+      </div>
+
+      <div class="form-group">
+        <label for="contentText">과제 설명 *</label>
+        <textarea id="contentText" name="contentText" rows="8" required placeholder="과제에 대한 상세한 설명과 요구사항을 입력해주세요."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="dueAt">마감 일시 *</label>
+        <input type="datetime-local" id="dueAt" name="dueAt" required>
+      </div>
+
+      <div style="display: flex; gap: 10px; justify-content: flex-end;">
+        <a th:href="@{|/prof/course-detail/${course.id}|}" class="btn btn-secondary">취소</a>
+        <button type="submit" class="btn">과제 생성</button>
+      </div>
+    </form>
+  </div>
+</div>
+</body>
+</html>

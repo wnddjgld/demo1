@@ -1,11 +1,68 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"><title>과제 시스템</title>
+    <meta charset="UTF-8">
+    <title>과제 시스템</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-<h2>과제 제출 시스템</h2>
-<p><a href="/login">로그인</a> | <a href="/register">회원가입</a></p>
+<div class="container">
+    <header class="header">
+        <div class="header-content" style="text-align: center;">
+            <h1>🎓 과제 제출 시스템</h1>
+            <p style="margin: 0; opacity: 0.9;">과제 관리 시스템</p>
+        </div>
+    </header>
+
+    <div style="text-align: center; margin: 60px 0;">
+        <p style="color: #666; font-size: 18px; margin-bottom: 40px;"></p>
+
+        <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+            <a href="/login" class="btn" style="font-size: 16px; padding: 15px 30px;">🔑 로그인</a>
+            <a href="/register" class="btn btn-secondary" style="font-size: 16px; padding: 15px 30px;">👤 회원가입</a>
+        </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin: 60px 0;">
+        <div class="card" style="text-align: center;">
+            <h3>👨‍🎓 학생용 기능</h3>
+            <ul style="text-align: left; padding-left: 20px;">
+                <li>수업 참여 및 탈퇴</li>
+                <li>과제 확인 및 제출</li>
+                <li>점수 및 피드백 확인</li>
+                <li>제출 기한 관리</li>
+            </ul>
+        </div>
+
+        <div class="card" style="text-align: center;">
+            <h3>👨‍🏫 교수용 기능</h3>
+            <ul style="text-align: left; padding-left: 20px;">
+                <li>수업 개설 및 관리</li>
+                <li>과제 생성 및 등록</li>
+                <li>학생 제출물 확인</li>
+                <li>점수 부여 및 피드백</li>
+            </ul>
+        </div>
+
+        <div class="card" style="text-align: center;">
+            <h3>🛡️ 관리자 기능</h3>
+            <ul style="text-align: left; padding-left: 20px;">
+                <li>사용자 계정 관리</li>
+                <li>교수 승인 관리</li>
+                <li>전체 수업 현황</li>
+                <li>시스템 통계</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="card" style="text-align: center; background: #f8f9fa;">
+        <h3>빠른 시작</h3>
+        <div style="margin-top: 20px;">
+            <small style="color: #666;">
+                테스트용 관리자 계정: admin / admin1234
+            </small>
+        </div>
+    </div>
+</div>
 </body>
 </html>

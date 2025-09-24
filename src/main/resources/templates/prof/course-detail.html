@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>수업 상세</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="container">
+  <header class="header">
+    <div class="header-content">
+      <h1 th:text="'📋 ' + ${course.title}"></h1>
+      <div class="user-info">
+        <span th:text="'환영합니다, ' + ${me.name} + ' 교수님'"></span>
+        <a href="/logout" class="logout-btn">로그아웃</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="nav-links">
+    <a href="/prof/home">🏠 홈</a>
+    <a href="/prof/courses">📚 내 수업</a>
+    <a th:href="@{|/prof/course-detail/${course.id}|}">📋 수업 상세</a>
+  </div>
+
+  <div class="card" style="margin-bottom: 30px;">
+    <h2 th:text="${course.title}"></h2>
+    <p th:text="${course.description}"></p>
+    <div class="course-actions">
+      <a th:href="@{|/prof/create-assignment/${course.id}|}" class="btn btn-success">📝 새 과제 생성</a>
+      <a th:href="@{|/prof/create-announcement/${course.id}|}" class="btn btn-secondary">📢 공지사항 등록</a>
+    </div>
+  </div>
+
+  <h3>📝 등록된 과제</h3>
+  <div th:if="${#lists.isEmpty(assignments)}" class="card" style="text-align: center;">
+    <p>아직 등록된 과제가 없습니다.</p>
+    <a th:href="@{|/prof/create-assignment/${course.id}|}" class="btn">첫 번째 과제 생성하기</a>
+  </div>
+
+  <ul class="assignment-list" th:unless="${#lists.isEmpty(assignments)}">
+    <li class="assignment-item" th:each="a : ${assignments}">
+      <div class="assignment-title" th:text="${a.title}"></div>
+      <div class="assignment-description" th:text="${a.contentText}"></div>
+      <div style="color: #666; margin-bottom: 15px;">
+        <span>마감일: </span>
+        <span th:text="${#temporals.format(a.dueAt, 'yyyy-MM-dd HH:mm')}"></span>
+        <span th:if="${#temporals.createNow().isAfter(a.dueAt)}" class="status-badge status-late" style="margin-left: 10px;">마감됨</span>
+        <span th:unless="${#temporals.createNow().isAfter(a.dueAt)}" class="status-badge status-submitted" style="margin-left: 10px;">진행중</span>
+      </div>
+      <div class="assignment-actions">
+        <a th:href="@{|/prof/assignment-submissions/${a.id}|}" class="btn btn-small">📄 제출물 확인</a>
+      </div>
+    </li>
+  </ul>
+
+  <div style="margin-top: 40px;">
+    <h3>👥 수강 학생 현황</h3>
+    <div class="card">
+      <p th:text="'총 ' + ${#lists.size(enrollments)} + '명의 학생이 수강 중입니다.'"></p>
+    </div>
+  </div>
+</div>
+</body>
+</html>

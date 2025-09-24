@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>공지사항 등록</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="container">
+  <header class="header">
+    <div class="header-content">
+      <h1>📢 공지사항 등록</h1>
+      <div class="user-info">
+        <span th:text="'환영합니다, ' + ${me.name} + ' 교수님'"></span>
+        <a href="/logout" class="logout-btn">로그아웃</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="nav-links">
+    <a href="/prof/home">🏠 홈</a>
+    <a href="/prof/courses">📚 내 수업</a>
+    <a th:href="@{|/prof/course-detail/${course.id}|}">📋 수업 상세</a>
+  </div>
+
+  <div class="card" style="margin-bottom: 20px;">
+    <h3 th:text="'수업: ' + ${course.title}"></h3>
+    <p th:text="${course.description}"></p>
+  </div>
+
+  <div class="form-container">
+    <h2>공지사항 작성</h2>
+    <form method="post" th:action="@{|/prof/create-announcement/${course.id}|}">
+      <div class="form-group">
+        <label for="title">공지 제목 *</label>
+        <input type="text" id="title" name="title" required placeholder="예: 중간고사 안내">
+      </div>
+
+      <div class="form-group">
+        <label for="content">공지 내용 *</label>
+        <textarea id="content" name="content" rows="10" required placeholder="공지사항 내용을 상세히 입력해주세요."></textarea>
+      </div>
+
+      <div style="display: flex; gap: 10px; justify-content: flex-end;">
+        <a th:href="@{|/prof/course-detail/${course.id}|}" class="btn btn-secondary">취소</a>
+        <button type="submit" class="btn">공지 등록</button>
+      </div>
+    </form>
+  </div>
+</div>
+</body>
+</html>

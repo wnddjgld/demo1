@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>수업 생성</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="container">
+    <header class="header">
+        <div class="header-content">
+            <h1>➕ 새 수업 생성</h1>
+            <div class="user-info">
+                <span th:text="'환영합니다, ' + ${me.name} + ' 교수님'"></span>
+                <a href="/logout" class="logout-btn">로그아웃</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="nav-links">
+        <a href="/prof/home">🏠 홈</a>
+        <a href="/prof/courses">📚 내 수업</a>
+        <a href="/prof/create-course">➕ 수업 생성</a>
+    </div>
+
+    <div class="form-container">
+        <h2>수업 정보 입력</h2>
+        <form method="post" action="/prof/courses">
+            <div class="form-group">
+                <label for="title">수업명 *</label>
+                <input type="text" id="title" name="title" required placeholder="예: 자료구조와 알고리즘">
+            </div>
+
+            <div class="form-group">
+                <label for="description">수업 설명</label>
+                <textarea id="description" name="description" rows="5" placeholder="수업에 대한 상세한 설명을 입력해주세요."></textarea>
+            </div>
+
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <a href="/prof/courses" class="btn btn-secondary">취소</a>
+                <button type="submit" class="btn">수업 생성</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>과제 결과</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="container">
+  <header class="header">
+    <div class="header-content">
+      <h1>📊 과제 결과 확인</h1>
+      <div class="user-info">
+        <span th:text="'환영합니다, ' + ${me.name} + ' 님'"></span>
+        <a href="/logout" class="logout-btn">로그아웃</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="nav-links">
+    <a href="/stu/home">🏠 홈</a>
+    <a href="/stu/my-courses">📚 내 수업</a>
+    <a th:href="@{|/stu/course-detail/${assignment.course.id}|}">📋 수업 상세</a>
+  </div>
+
+  <div class="card" style="margin-bottom: 20px;">
+    <h2 th:text="${assignment.title}"></h2>
+    <div th:text="${assignment.contentText}" style="white-space: pre-wrap; margin-bottom: 15px;"></div>
+    <div style="color: #666;">
+      <span>마감일: </span>
+      <span th:text="${#temporals.format(assignment.dueAt, 'yyyy-MM-dd HH:mm')}"></span>
+    </div>
+  </div>
+
+  <div th:if="${submission == null}" class="card" style="text-align: center; padding: 40px;">
+    <h3>아직 제출하지 않은 과제입니다</h3>
+    <p>과제를 제출한 후 결과를 확인할 수 있습니다.</p>
+    <a th:href="@{|/stu/assignment/${assignment.id}|}" class="btn">과제 제출하기</a>
+  </div>
+
+  <div th:if="${submission != null}">
+    <div class="card" style="margin-bottom: 20px;">
+      <h3>제출 정보</h3>
+      <div><strong>제출 시간:</strong> <span th:text="${#temporals.format(submission.submittedAt, 'yyyy-MM-dd HH:mm')}"></span></div>
+      <div style="margin-top: 10px;">
+        <strong>제출 상태:</strong>
+        <span class="status-badge status-late" th:if="${submission.late}">지연 제출</span>
+        <span class="status-badge status-submitted" th:unless="${submission.late}">정시 제출</span>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom: 20px;">
+      <h3>제출 내용</h3>
+      <div style="margin-bottom: 15px;">
+        <strong>텍스트 답안:</strong>
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 6px; margin-top: 10px; white-space: pre-wrap;"
+             th:text="${submission.text}"></div>
+      </div>
+      <div th:if="${submission.filePath}">
+        <strong>첨부 파일:</strong>
+        <div style="margin-top: 10px;">
+          <span th:text="${submission.filePath}"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" th:if="${submission.score != null or submission.feedback}">
+      <h3>채점 결과</h3>
+      <div th:if="${submission.score != null}" style="margin-bottom: 15px;">
+        <strong>점수:</strong>
+        <span class="score-display" th:text="${submission.score} + '점'"></span>
+      </div>
+      <div th:if="${submission.feedback}">
+        <strong>교수님 피드백:</strong>
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 6px; margin-top: 10px; white-space: pre-wrap;"
+             th:text="${submission.feedback}"></div>
+      </div>
+    </div>
+
+    <div class="card" th:unless="${submission.score != null or submission.feedback}" style="text-align: center;">
+      <h3>아직 채점되지 않았습니다</h3>
+      <p>교수님의 채점을 기다려 주세요.</p>
+      <span class="status-badge status-pending">채점 대기중</span>
+    </div>
+
+    <div style="text-align: center; margin-top: 30px;">
+      <a th:href="@{|/stu/assignment/${assignment.id}|}" class="btn btn-secondary">과제 다시 제출하기</a>
+    </div>
+  </div>
+</div>
+</body>
+</html>

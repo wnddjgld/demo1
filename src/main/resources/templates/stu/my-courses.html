@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>내 수업</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="container">
+  <header class="header">
+    <div class="header-content">
+      <h1>📚 내 수업</h1>
+      <div class="user-info">
+        <span th:text="'환영합니다, ' + ${me.name} + ' 님'"></span>
+        <a href="/logout" class="logout-btn">로그아웃</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="nav-links">
+    <a href="/stu/home">🏠 홈</a>
+    <a href="/stu/my-courses">📚 내 수업</a>
+    <a href="/stu/courses">🔍 수업 찾기</a>
+  </div>
+
+  <h2>수강 중인 수업 목록</h2>
+
+  <div th:if="${#lists.isEmpty(courses)}" class="card" style="text-align: center; padding: 40px;">
+    <h3>아직 수강 중인 수업이 없습니다</h3>
+    <p>새로운 수업에 참여하여 학습을 시작해보세요.</p>
+    <a href="/stu/courses" class="btn">수업 찾아보기</a>
+  </div>
+
+  <ul class="course-list" th:unless="${#lists.isEmpty(courses)}">
+    <li class="course-item" th:each="c : ${courses}">
+      <div class="course-title" th:text="${c.title}"></div>
+      <div class="course-description" th:text="${c.description}"></div>
+      <div style="color: #666; margin-bottom: 15px;">
+        <span>담당교수: </span>
+        <span th:text="${c.professor.name}"></span>
+      </div>
+      <div class="course-actions">
+        <a th:href="@{|/stu/course-detail/${c.id}|}" class="btn btn-small">📋 수업 상세</a>
+      </div>
+    </li>
+  </ul>
+</div>
+</body>
+</html>

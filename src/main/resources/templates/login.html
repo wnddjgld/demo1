@@ -1,15 +1,69 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"><title>로그인</title>
+    <meta charset="UTF-8">
+    <title>로그인</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-<h2>로그인</h2>
-<form method="post" action="/login">
-    <label>아이디 <input name="username"></label><br>
-    <label>비밀번호 <input type="password" name="password"></label><br>
-    <button type="submit">로그인</button>
-</form>
+<div class="container">
+    <header class="header">
+        <div class="header-content">
+            <h1>🎓 과제 제출 시스템</h1>
+        </div>
+    </header>
+
+    <div class="form-container" style="max-width: 400px; margin: 50px auto;">
+        <h2 style="text-align: center; margin-bottom: 30px;">로그인</h2>
+
+        <div th:if="${param.logout}" class="alert alert-success">
+            로그아웃되었습니다.
+        </div>
+        <div th:if="${param.registered}" class="alert alert-success">
+            회원가입이 완료되었습니다. 로그인해주세요.
+        </div>
+        <div th:if="${param.prof_applied}" class="alert alert-info">
+            교수 가입 신청이 완료되었습니다. 관리자 승인 후 교수 권한으로 로그인 가능합니다.
+        </div>
+        <div th:if="${param.error}" class="alert alert-danger">
+            아이디 또는 비밀번호가 올바르지 않습니다.
+        </div>
+
+        <form method="post" action="/login">
+            <div class="form-group">
+                <label for="username">아이디</label>
+                <input type="text" id="username" name="username" required placeholder="아이디를 입력하세요">
+            </div>
+
+            <div class="form-group">
+                <label for="password">비밀번호</label>
+                <input type="password" id="password" name="password" required placeholder="비밀번호를 입력하세요">
+            </div>
+
+            <div style="text-align: center;">
+                <button type="submit" class="btn" style="width: 100%; margin-bottom: 20px;">로그인</button>
+                <p>계정이 없으신가요? <a href="/register" style="color: #667eea;">회원가입</a></p>
+            </div>
+        </form>
+    </div>
+
+    <div class="card" style="max-width: 600px; margin: 30px auto; text-align: center;">
+        <h3>🔐 테스트 계정</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-top: 15px;">
+            <div>
+                <strong>관리자</strong><br>
+                <small>ID: admin<br>PW: admin1234</small>
+            </div>
+            <div>
+                <strong>교수</strong><br>
+                <small>가입 후 관리자 승인 필요</small>
+            </div>
+            <div>
+                <strong>학생</strong><br>
+                <small>가입 후 즉시 이용 가능</small>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>과제 제출물 확인</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="container">
+  <header class="header">
+    <div class="header-content">
+      <h1>📄 과제 제출물 확인</h1>
+      <div class="user-info">
+        <span th:text="'환영합니다, ' + ${me.name} + ' 교수님'"></span>
+        <a href="/logout" class="logout-btn">로그아웃</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="nav-links">
+    <a href="/prof/home">🏠 홈</a>
+    <a href="/prof/courses">📚 내 수업</a>
+    <a th:href="@{|/prof/course-detail/${assignment.course.id}|}">📋 수업 상세</a>
+  </div>
+
+  <div class="card" style="margin-bottom: 30px;">
+    <h2 th:text="${assignment.title}"></h2>
+    <p th:text="${assignment.contentText}"></p>
+    <div style="color: #666;">
+      <span>마감일: </span>
+      <span th:text="${#temporals.format(assignment.dueAt, 'yyyy-MM-dd HH:mm')}"></span>
+    </div>
+  </div>
+
+  <h3>제출물 목록 (<span th:text="${#lists.size(submissions)}"></span>건)</h3>
+
+  <div th:if="${#lists.isEmpty(submissions)}" class="card" style="text-align: center;">
+    <p>아직 제출된 과제가 없습니다.</p>
+  </div>
+
+  <div class="table-container" th:unless="${#lists.isEmpty(submissions)}">
+    <table>
+      <thead>
+      <tr>
+        <th>학생명</th>
+        <th>제출 시간</th>
+        <th>상태</th>
+        <th>점수</th>
+        <th>관리</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="s : ${submissions}">
+        <td th:text="${s.student.name}"></td>
+        <td th:text="${#temporals.format(s.submittedAt, 'yyyy-MM-dd HH:mm')}"></td>
+        <td>
+          <span class="status-badge status-late" th:if="${s.late}">지연 제출</span>
+          <span class="status-badge status-submitted" th:unless="${s.late}">정시 제출</span>
+        </td>
+        <td>
+          <span th:if="${s.score != null}" class="score-display" th:text="${s.score} + '점'"></span>
+          <span th:unless="${s.score != null}" class="status-badge status-pending">미채점</span>
+        </td>
+        <td>
+          <a th:href="@{|/prof/grade-submission/${s.id}|}" class="btn btn-small">
+            <span th:if="${s.score != null}">✏️ 재채점</span>
+            <span th:unless="${s.score != null}">📝 채점하기</span>
+          </a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</body>
+</html>

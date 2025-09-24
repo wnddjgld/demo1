@@ -1,6 +1,9 @@
 package com.example.demo.web;
 
 import jakarta.validation.constraints.NotBlank;
+import com.example.demo.domain.Role;
+import com.example.demo.domain.User;
+import com.example.demo.repository.UserRepository;
 import com.example.demo.service.AuthService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -15,14 +18,27 @@ import org.springframework.web.bind.annotation.*;
 public class HomeAuthController {
 
     private final AuthService authService;
+    private final UserRepository userRepo;
 
     @GetMapping("/")
     public String index() { return "index"; }
 
     @GetMapping("/home")
     public String home(@AuthenticationPrincipal UserDetails me, Model model) {
-        model.addAttribute("me", me);
-        return "home";
+        User user = userRepo.findByUsername(me.getUsername()).orElseThrow();
+
+        // 역할에 따라 다른 홈으로 리다이렉트
+        switch (user.getRole()) {
+            case ADMIN:
+                return "redirect:/admin/home";
+            case PROFESSOR:
+                return "redirect:/prof/home";
+            case STUDENT:
+                return "redirect:/stu/home";
+            default:
+                model.addAttribute("me", me);
+                return "home";
+        }
     }
 
     @GetMapping("/login")

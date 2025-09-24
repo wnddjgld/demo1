@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>과제 채점</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="container">
+  <header class="header">
+    <div class="header-content">
+      <h1>📝 과제 채점</h1>
+      <div class="user-info">
+        <span th:text="'환영합니다, ' + ${me.name} + ' 교수님'"></span>
+        <a href="/logout" class="logout-btn">로그아웃</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="nav-links">
+    <a href="/prof/home">🏠 홈</a>
+    <a href="/prof/courses">📚 내 수업</a>
+    <a th:href="@{|/prof/assignment-submissions/${submission.assignment.id}|}">📄 제출물 목록</a>
+  </div>
+
+  <div class="card" style="margin-bottom: 20px;">
+    <h3>과제 정보</h3>
+    <div><strong>과제명:</strong> <span th:text="${submission.assignment.title}"></span></div>
+    <div><strong>학생명:</strong> <span th:text="${submission.student.name}"></span></div>
+    <div><strong>제출 시간:</strong> <span th:text="${#temporals.format(submission.submittedAt, 'yyyy-MM-dd HH:mm')}"></span></div>
+    <div>
+      <strong>제출 상태:</strong>
+      <span class="status-badge status-late" th:if="${submission.late}">지연 제출</span>
+      <span class="status-badge status-submitted" th:unless="${submission.late}">정시 제출</span>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom: 20px;">
+    <h3>제출 내용</h3>
+    <div style="margin-bottom: 15px;">
+      <strong>텍스트 답안:</strong>
+      <div style="background: #f8f9fa; padding: 15px; border-radius: 6px; margin-top: 10px; white-space: pre-wrap;" th:text="${submission.text}"></div>
+    </div>
+    <div th:if="${submission.filePath}">
+      <strong>첨부 파일:</strong>
+      <div style="margin-top: 10px;">
+        <span th:text="${submission.filePath}"></span>
+        <small style="color: #666;"> (파일 다운로드 기능은 추후 구현 예정)</small>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-container">
+    <h3>채점 및 피드백</h3>
+    <form method="post" th:action="@{|/prof/grade-submission/${submission.id}|}">
+      <div class="form-group">
+        <label for="score">점수 (0-100점) *</label>
+        <input type="number" id="score" name="score" min="0" max="100" required
+               th:value="${submission.score}" placeholder="점수를 입력하세요">
+      </div>
+
+      <div class="form-group">
+        <label for="feedback">피드백</label>
+        <textarea id="feedback" name="feedback" rows="6"
+                  th:text="${submission.feedback}"
+                  placeholder="학생에게 전달할 피드백을 입력하세요."></textarea>
+      </div>
+
+      <div style="display: flex; gap: 10px; justify-content: flex-end;">
+        <a th:href="@{|/prof/assignment-submissions/${submission.assignment.id}|}" class="btn btn-secondary">취소</a>
+        <button type="submit" class="btn">채점 완료</button>
+      </div>
+    </form>
+  </div>
+</div>
+</body>
+</html>

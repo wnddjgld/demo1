@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>수업 관리</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="container">
+  <header class="header">
+    <div class="header-content">
+      <h1>📚 수업 관리</h1>
+      <div class="user-info">
+        <span th:text="'환영합니다, ' + ${me.name} + ' 님'"></span>
+        <a href="/logout" class="logout-btn">로그아웃</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="nav-links">
+    <a href="/admin/home">🏠 홈</a>
+    <a href="/admin/users">👥 사용자 관리</a>
+    <a href="/admin/courses">📚 수업 관리</a>
+  </div>
+
+  <h2>전체 수업 목록</h2>
+
+  <div class="table-container">
+    <table>
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>수업명</th>
+        <th>담당교수</th>
+        <th>설명</th>
+        <th>관리</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="c : ${courses}">
+        <td th:text="${c.id}"></td>
+        <td th:text="${c.title}"></td>
+        <td th:text="${c.professor.name}"></td>
+        <td th:text="${c.description}"></td>
+        <td>
+          <a th:href="@{|/prof/course-detail/${c.id}|}" class="btn btn-small">상세보기</a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</body>
+</html>
