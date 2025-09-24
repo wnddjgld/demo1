@@ -19,4 +19,8 @@ public class User {
     private Role role;
 
     private boolean enabled;
+
+    // ▼▼▼ 교수 신청자 여부를 나타내는 필드 ▼▼▼
+    @Column(columnDefinition = "boolean default false")
+    private boolean professorApplicant;
 }

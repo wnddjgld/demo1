@@ -1,19 +1,55 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"><title>수업 목록</title>
+    <meta charset="UTF-8">
+    <title>수업 찾기</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-<h2>수업 목록</h2>
-<ul>
-    <li th:each="c : ${courses}">
-        <b th:text="${c.title}"></b>
-        <form th:action="@{|/stu/join/${c.id}|}" method="post" style="display:inline">
-            <button>참여</button>
-        </form>
-    </li>
-</ul>
-<p><a href="/home">뒤로</a></p>
+<div class="container">
+    <header class="header">
+        <div class="header-content">
+            <h1>🔍 수업 찾기</h1>
+            <div class="user-info">
+                <span th:text="'환영합니다, ' + ${me.name} + ' 님'"></span>
+                <a href="/logout" class="logout-btn">로그아웃</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="nav-links">
+        <a href="/stu/home">🏠 홈</a>
+        <a href="/stu/my-courses">📚 내 수업</a>
+        <a href="/stu/courses">🔍 수업 찾기</a>
+    </div>
+
+    <h2>전체 수업 목록</h2>
+
+    <div th:if="${#lists.isEmpty(courses)}" class="card" style="text-align: center;">
+        <p>현재 개설된 수업이 없습니다.</p>
+    </div>
+
+    <ul class="course-list" th:unless="${#lists.isEmpty(courses)}">
+        <li class="course-item" th:each="c : ${courses}">
+            <div class="course-title" th:text="${c.title}"></div>
+            <div class="course-description" th:text="${c.description}"></div>
+            <div style="color: #666; margin-bottom: 15px;">
+                <span>담당교수: </span>
+                <span th:text="${c.professor.name}"></span>
+            </div>
+            <div class="course-actions">
+                <div th:if="${myCourseIds.contains(c.id)}">
+                    <span class="status-badge status-submitted">수강중</span>
+                    <a th:href="@{|/stu/course-detail/${c.id}|}" class="btn btn-small btn-secondary">상세보기</a>
+                </div>
+
+                <form th:unless="${myCourseIds.contains(c.id)}"
+                      th:action="@{|/stu/join/${c.id}|}" method="post" style="display:inline">
+                    <button type="submit" class="btn btn-small btn-success">수강 신청</button>
+                </form>
+            </div>
+        </li>
+    </ul>
+</div>
 </body>
 </html>

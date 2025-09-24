@@ -7,6 +7,7 @@ import com.example.demo.repository.CourseRepository;
 import com.example.demo.repository.AssignmentRepository;
 import com.example.demo.repository.SubmissionRepository;
 import com.example.demo.service.AuthService;
+import com.example.demo.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,6 +24,7 @@ public class AdminController {
     private final AssignmentRepository assignmentRepo;
     private final SubmissionRepository submissionRepo;
     private final AuthService authService;
+    private final CourseService courseService;
 
     @GetMapping("/home")
     public String adminHome(@AuthenticationPrincipal UserDetails me, Model model) {
@@ -74,5 +76,13 @@ public class AdminController {
             userRepo.deleteById(id);
         }
         return "redirect:/admin/users";
+    }
+    /**
+     * [추가] 관리자가 수업을 삭제
+     */
+    @PostMapping("/delete-course/{courseId}")
+    public String deleteCourse(@PathVariable Long courseId) {
+        courseService.deleteCourse(courseId);
+        return "redirect:/admin/courses";
     }
 }

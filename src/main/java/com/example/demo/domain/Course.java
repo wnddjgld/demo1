@@ -12,6 +12,6 @@ public class Course {
     private String title;
     @Lob private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER) // [수정] LAZY를 EAGER로 변경해주세요.
     private User professor;
 }

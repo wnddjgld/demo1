@@ -1,19 +1,63 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"><title>과제 제출</title>
+    <meta charset="UTF-8">
+    <title>과제 제출</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-<h2 th:text="${asg.title}">과제</h2>
-<p th:text="${asg.contentText}"></p>
-<p>마감: <span th:text="${asg.dueAt}"></span></p>
+<div class="container">
+    <header class="header">
+        <div class="header-content">
+            <h1 th:text="'📝 ' + ${assignment.title}"></h1>
+            <div class="user-info">
+                <span th:text="'환영합니다, ' + ${me.name} + ' 님'"></span>
+                <a href="/logout" class="logout-btn">로그아웃</a>
+            </div>
+        </div>
+    </header>
 
-<form th:action="@{|/stu/submit/${asg.id}|}" method="post" enctype="multipart/form-data">
-    <textarea name="text" placeholder="과제 텍스트" rows="5" cols="60"></textarea><br>
-    <input type="file" name="file"><br>
-    <button type="submit">제출</button>
-</form>
-<p><a href="/stu/courses">뒤로</a></p>
+    <div class="nav-links">
+        <a href="/stu/home">🏠 홈</a>
+        <a href="/stu/my-courses">📚 내 수업</a>
+        <a th:href="@{|/stu/course-detail/${assignment.course.id}|}">📋 수업 상세</a>
+    </div>
+
+    <div class="card" style="margin-bottom: 20px;">
+        <h2 th:text="${assignment.title}"></h2>
+        <div th:text="${assignment.contentText}" style="white-space: pre-wrap; margin-bottom: 15px;"></div>
+        <div style="color: #666;">
+            <span>마감일: </span>
+            <span th:text="${#temporals.format(assignment.dueAt, 'yyyy-MM-dd HH:mm')}"></span>
+        </div>
+    </div>
+
+    <div class="form-container">
+        <h3>과제 제출</h3>
+        <form th:action="@{|/stu/submit/${assignment.id}|}" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="text">텍스트 답변</label>
+                <textarea id="text" name="text" rows="8" placeholder="과제에 대한 답변을 텍스트로 입력하세요."
+                          th:text="${submission != null ? submission.text : ''}"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="file">파일 첨부</label>
+                <input type="file" id="file" name="file">
+                <div th:if="${submission != null and submission.filePath}" style="margin-top: 10px;">
+                    <small style="color: #666;">기존 제출 파일: <span th:text="${submission.filePath}"></span></small>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <a th:href="@{|/stu/course-detail/${assignment.course.id}|}" class="btn btn-secondary">취소</a>
+                <button type="submit" class="btn">
+                    <span th:if="${submission != null}">다시 제출하기</span>
+                    <span th:unless="${submission != null}">제출하기</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 </body>
 </html>

@@ -27,13 +27,17 @@ public class HomeAuthController {
     public String home(@AuthenticationPrincipal UserDetails me, Model model) {
         User user = userRepo.findByUsername(me.getUsername()).orElseThrow();
 
-        // 역할에 따라 다른 홈으로 리다이렉트
+        // [수정] 역할에 따라 다른 홈으로 리다이렉트
         switch (user.getRole()) {
             case ADMIN:
                 return "redirect:/admin/home";
             case PROFESSOR:
                 return "redirect:/prof/home";
             case STUDENT:
+                // [추가] 교수 신청자인 경우, 승인 대기 페이지로 이동
+                if (user.isProfessorApplicant()) {
+                    return "redirect:/pending-approval";
+                }
                 return "redirect:/stu/home";
             default:
                 model.addAttribute("me", me);
@@ -57,6 +61,10 @@ public class HomeAuthController {
     public String registerProf(@ModelAttribute RegForm f) {
         authService.registerProfessorApplicant(f.getUsername(), f.getPassword(), f.getName());
         return "redirect:/login?prof_applied";
+    }
+    @GetMapping("/pending-approval")
+    public String pendingApprovalPage() {
+        return "pending_approval";
     }
 
     @Data

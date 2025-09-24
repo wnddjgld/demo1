@@ -185,6 +185,37 @@ public class ProfessorController {
         courseService.postAssignment(courseId, title, contentText, LocalDateTime.parse(dueAt));
         return "redirect:/prof/courses";
     }
+    @PostMapping("/delete-course/{courseId}")
+    public String deleteCourse(@AuthenticationPrincipal UserDetails me, @PathVariable Long courseId) {
+        User prof = userRepo.findByUsername(me.getUsername()).orElseThrow();
+        Course course = courseRepo.findById(courseId).orElseThrow();
 
+        // 수업 소유권 확인
+        if (!course.getProfessor().getId().equals(prof.getId())) {
+            return "redirect:/prof/courses";
+        }
+
+        courseService.deleteCourse(courseId);
+        return "redirect:/prof/courses";
+    }
+
+    /**
+     * [추가] 교수가 자신의 과제를 삭제
+     */
+    @PostMapping("/delete-assignment/{assignmentId}")
+    public String deleteAssignment(@AuthenticationPrincipal UserDetails me, @PathVariable Long assignmentId) {
+        User prof = userRepo.findByUsername(me.getUsername()).orElseThrow();
+        Assignment assignment = assignmentRepo.findById(assignmentId).orElseThrow();
+
+        // 과제가 속한 수업의 소유권 확인
+        if (!assignment.getCourse().getProfessor().getId().equals(prof.getId())) {
+            return "redirect:/prof/courses";
+        }
+
+        Long courseId = assignment.getCourse().getId(); // 리다이렉션을 위해 courseId 저장
+        courseService.deleteAssignment(assignmentId);
+
+        return "redirect:/prof/course-detail/" + courseId;
+    }
     @Data public static class CourseForm { private String title; private String description; }
 }

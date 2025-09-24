@@ -1,35 +1,47 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"><title>내 수업</title>
+    <meta charset="UTF-8">
+    <title>내 수업</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-<h2>내 수업</h2>
+<div class="container">
+    <header class="header">
+        <div class="header-content">
+            <h1>📚 내 수업</h1>
+            <div class="user-info">
+                <span th:text="'환영합니다, ' + ${me.name} + ' 교수님'"></span>
+                <a href="/logout" class="logout-btn">로그아웃</a>
+            </div>
+        </div>
+    </header>
 
-<form method="post" action="/prof/courses">
-    <input name="title" placeholder="수업명">
-    <input name="description" placeholder="설명">
-    <button type="submit">수업 생성</button>
-</form>
+    <div class="nav-links">
+        <a href="/prof/home">🏠 홈</a>
+        <a href="/prof/courses">📚 내 수업</a>
+        <a href="/prof/create-course">➕ 수업 생성</a>
+    </div>
 
-<ul>
-    <li th:each="c : ${courses}">
-        <b th:text="${c.title}"></b>
-        <form th:action="@{|/prof/announce/${c.id}|}" method="post" style="display:inline">
-            <input name="title" placeholder="공지제목">
-            <input name="content" placeholder="공지내용">
-            <button>공지등록</button>
-        </form>
-        <form th:action="@{|/prof/assign/${c.id}|}" method="post" style="display:inline">
-            <input name="title" placeholder="과제제목">
-            <input name="contentText" placeholder="과제설명">
-            <input name="dueAt" placeholder="마감시각 ISO(YYYY-MM-DDTHH:mm)">
-            <button>과제등록</button>
-        </form>
-    </li>
-</ul>
+    <h2>내 수업 목록</h2>
 
-<p><a href="/home">뒤로</a></p>
+    <div th:if="${#lists.isEmpty(courses)}" class="card" style="text-align: center; padding: 40px;">
+        <h3>아직 개설한 수업이 없습니다</h3>
+        <p>새로운 수업을 만들어 학습을 시작해보세요.</p>
+        <a href="/prof/create-course" class="btn">첫 수업 개설하기</a>
+    </div>
+
+    <ul class="course-list" th:unless="${#lists.isEmpty(courses)}">
+        <li class="course-item" th:each="c : ${courses}">
+            <div class="course-title" th:text="${c.title}"></div>
+            <div class="course-description" th:text="${c.description}"></div>
+            <div class="course-actions">
+                <a th:href="@{|/prof/course-detail/${c.id}|}" class="btn btn-small">📋 수업 상세</a>
+                <a th:href="@{|/prof/create-assignment/${c.id}|}" class="btn btn-small btn-success">📝 과제 생성</a>
+                <a th:href="@{|/prof/create-announcement/${c.id}|}" class="btn btn-small btn-secondary">📢 공지 등록</a>
+            </div>
+        </li>
+    </ul>
+</div>
 </body>
 </html>

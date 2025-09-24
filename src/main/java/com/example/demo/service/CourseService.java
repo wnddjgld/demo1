@@ -5,12 +5,14 @@ import com.example.demo.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.transaction.annotation.Transactional; // [추가]
 
 import java.nio.file.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+@Transactional
 @Service
 @RequiredArgsConstructor
 public class CourseService {
@@ -86,5 +88,32 @@ public class CourseService {
 
     public List<Submission> listSubmissions(Long assignmentId) {
         return subRepo.findByAssignmentId(assignmentId);
+    }
+    public void deleteCourse(Long courseId) {
+        // 1. 해당 수업의 과제들에 속한 모든 제출물 삭제
+        List<Assignment> assignments = asgRepo.findByCourseIdOrderByCreatedAtDesc(courseId);
+        for (Assignment assignment : assignments) {
+            subRepo.deleteAllByAssignment_Id(assignment.getId());
+        }
+
+        // 2. 수업에 직접적으로 관련된 공지, 과제, 수강신청 정보 삭제
+        annRepo.deleteAllByCourse_Id(courseId);
+        asgRepo.deleteAllByCourse_Id(courseId);
+        enrollRepo.deleteAllByCourse_Id(courseId);
+
+        // 3. 최종적으로 수업 자체를 삭제
+        courseRepo.deleteById(courseId);
+    }
+
+    /**
+     * [추가] 과제 삭제 로직
+     * @param assignmentId 삭제할 과제 ID
+     */
+    @Transactional
+    public void deleteAssignment(Long assignmentId) {
+        // 1. 과제에 속한 모든 제출물 삭제
+        subRepo.deleteAllByAssignment_Id(assignmentId);
+        // 2. 과제 자체를 삭제
+        asgRepo.deleteById(assignmentId);
     }
 }

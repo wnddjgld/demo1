@@ -44,6 +44,9 @@
         <td th:text="${c.description}"></td>
         <td>
           <a th:href="@{|/prof/course-detail/${c.id}|}" class="btn btn-small">상세보기</a>
+          <form th:action="@{|/admin/delete-course/${c.id}|}" method="post" onsubmit="return confirm('관리자 권한으로 수업을 삭제합니다. 되돌릴 수 없습니다.');" style="display: inline-block;">
+            <button type="submit" class="btn btn-small btn-danger">삭제</button>
+          </form>
         </td>
       </tr>
       </tbody>

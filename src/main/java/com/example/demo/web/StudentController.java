@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.Set; // [추가]
 
 @Controller
 @RequiredArgsConstructor
@@ -54,6 +55,15 @@ public class StudentController {
         User student = userRepo.findByUsername(me.getUsername()).orElseThrow();
         model.addAttribute("me", student);
         model.addAttribute("courses", courseRepo.findAll());
+
+        // ▼▼▼ [추가] 학생이 이미 수강 중인 수업 ID 목록을 모델에 추가 ▼▼▼
+        Set<Long> myCourseIds = enrollRepo.findByStudentId(student.getId())
+                .stream()
+                .map(enrollment -> enrollment.getCourse().getId())
+                .collect(Collectors.toSet());
+        model.addAttribute("myCourseIds", myCourseIds);
+        // ▲▲▲ 여기까지 ▲▲▲
+
         return "stu/courses";
     }
 

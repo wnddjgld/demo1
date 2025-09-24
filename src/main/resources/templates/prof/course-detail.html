@@ -29,9 +29,11 @@
     <div class="course-actions">
       <a th:href="@{|/prof/create-assignment/${course.id}|}" class="btn btn-success">📝 새 과제 생성</a>
       <a th:href="@{|/prof/create-announcement/${course.id}|}" class="btn btn-secondary">📢 공지사항 등록</a>
+      <form th:action="@{|/prof/delete-course/${course.id}|}" method="post" onsubmit="return confirm('수업을 삭제하면 모든 관련 데이터가 영구적으로 삭제됩니다. 정말 삭제하시겠습니까?');" style="margin: 0;">
+        <button type="submit" class="btn btn-danger">🗑️ 수업 삭제</button>
+      </form>
     </div>
   </div>
-
   <h3>📝 등록된 과제</h3>
   <div th:if="${#lists.isEmpty(assignments)}" class="card" style="text-align: center;">
     <p>아직 등록된 과제가 없습니다.</p>
@@ -50,6 +52,9 @@
       </div>
       <div class="assignment-actions">
         <a th:href="@{|/prof/assignment-submissions/${a.id}|}" class="btn btn-small">📄 제출물 확인</a>
+        <form th:action="@{|/prof/delete-assignment/${a.id}|}" method="post" onsubmit="return confirm('이 과제를 정말 삭제하시겠습니까?');" style="margin: 0;">
+          <button type="submit" class="btn btn-small btn-danger">삭제</button>
+        </form>
       </div>
     </li>
   </ul>
@@ -60,6 +65,7 @@
       <p th:text="'총 ' + ${#lists.size(enrollments)} + '명의 학생이 수강 중입니다.'"></p>
     </div>
   </div>
+
 </div>
 </body>
 </html>
