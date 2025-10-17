@@ -47,15 +47,20 @@
                     <span th:if="${u.isProfessorApplicant()}" class="status-badge status-pending">승인 대기</span>
                 </td>
                 <td>
-                    <form th:if="${u.isProfessorApplicant()}"
-                          th:action="@{|/admin/approve/${u.id}|}" method="post" style="display: inline-block;">
-                        <button type="submit" class="btn btn-small btn-success">교수 승인</button>
-                    </form>
-                    <form th:if="${u.role.name() != 'ADMIN'}"
-                          th:action="@{|/admin/delete-user/${u.id}|}" method="post"
-                          onsubmit="return confirm('이 사용자를 정말 삭제하시겠습니까? 관련 데이터가 모두 삭제됩니다.');" style="display: inline-block;">
-                        <button type="submit" class="btn btn-small btn-danger">삭제</button>
-                    </form>
+                    <div th:if="${u.role.name() != 'ADMIN'}">
+                        <form th:action="@{|/admin/update-user-status/${u.id}|}" method="post" style="display: inline-flex; gap: 5px; align-items: center;">
+                            <select name="status" class="btn-small" style="padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;">
+                                <option value="STUDENT" th:selected="${u.role.name() == 'STUDENT' and !u.isProfessorApplicant()}">학생</option>
+                                <option value="PROFESSOR" th:selected="${u.role.name() == 'PROFESSOR'}">교수</option>
+                                <option value="PENDING" th:selected="${u.isProfessorApplicant()}">승인 대기</option>
+                            </select>
+                            <button type="submit" class="btn btn-small btn-secondary">변경</button>
+                        </form>
+                        <form th:action="@{|/admin/delete-user/${u.id}|}" method="post"
+                              onsubmit="return confirm('이 사용자를 정말 삭제하시겠습니까? 관련 데이터가 모두 삭제됩니다.');" style="display: inline-block;">
+                            <button type="submit" class="btn btn-small btn-danger">삭제</button>
+                        </form>
+                    </div>
                 </td>
             </tr>
             </tbody>

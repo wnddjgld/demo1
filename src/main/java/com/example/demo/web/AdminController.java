@@ -59,6 +59,14 @@ public class AdminController {
         authService.approveProfessor(id);
         return "redirect:/admin/users";
     }
+    /**
+     * [추가] 사용자 상태 변경을 처리하는 엔드포인트
+     */
+    @PostMapping("/update-user-status/{id}")
+    public String updateUserStatus(@PathVariable Long id, @RequestParam String status) {
+        authService.updateUserStatus(id, status);
+        return "redirect:/admin/users";
+    }
 
     @GetMapping("/courses")
     public String courses(@AuthenticationPrincipal UserDetails me, Model model) {

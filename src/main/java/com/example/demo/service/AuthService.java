@@ -38,4 +38,28 @@ public class AuthService {
         u.setProfessorApplicant(false); // [추가] 승인 후 상태 변경
         return users.save(u);
     }
+    /**
+     * [추가] 관리자가 사용자의 상태를 변경하는 메서드
+     * @param userId 사용자 ID
+     * @param status 변경할 상태 ("STUDENT", "PROFESSOR", "PENDING")
+     */
+    public User updateUserStatus(Long userId, String status) {
+        User u = users.findById(userId).orElseThrow();
+
+        switch (status) {
+            case "STUDENT":
+                u.setRole(Role.STUDENT);
+                u.setProfessorApplicant(false);
+                break;
+            case "PROFESSOR":
+                u.setRole(Role.PROFESSOR);
+                u.setProfessorApplicant(false);
+                break;
+            case "PENDING":
+                u.setRole(Role.STUDENT);
+                u.setProfessorApplicant(true);
+                break;
+        }
+        return users.save(u);
+    }
 }
